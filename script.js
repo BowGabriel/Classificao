@@ -1,23 +1,27 @@
 let classificacao = []; // Array para armazenar os pilotos e seus tempos
-const usuarioPermitido = "customs"; // Substitua pela sua senha
+const senhaPermitida = "customs"; // Substitua pela sua senha de acesso
 
-// Função para mostrar o formulário de adição de pilotos
 function mostrarFormulario() {
-    document.getElementById("formulario").style.display = "block";
+    document.getElementById("formulario").style.display = "block"; // Exibe o formulário
 }
 
-// Função para liberar o formulário
 function liberarFormulario() {
     const senha = document.getElementById('senha').value;
-    if (senha === usuarioPermitido) {
-        document.getElementById("formulario").style.display = "block"; // Exibe o formulário
-        carregarPilotos(); // Carrega pilotos do Firestore
+
+    // Verifica se a senha está correta
+    if (senha === senhaPermitida) {
+        document.getElementById("formulario").innerHTML = `
+            <input type="text" id="nomePiloto" placeholder="Nome do Piloto" />
+            <input type="text" id="tempoPiloto" placeholder="MM:ss:cc" />
+            <button onclick="adicionarPiloto()">Adicionar Piloto</button>
+            <button onclick="limparTabela()">Limpar Tabela</button>
+        `;
     } else {
-        alert("Senha incorreta.");
+        alert('Senha incorreta!');
     }
 }
 
-// Função para adicionar pilotos
+// Funções para adicionar pilotos, converter tempo e atualizar a tabela
 function adicionarPiloto() {
     const nome = document.getElementById('nomePiloto').value;
     const tempo = document.getElementById('tempoPiloto').value;
@@ -35,20 +39,66 @@ function adicionarPiloto() {
         return;
     }
 
-    // Adiciona o piloto ao Firestore
-    adicionarPilotoAoFirestore(nome, tempoEmCentésimos);
+    // Adiciona o piloto e seu tempo ao array
+    classificacao.push({ nome, tempo: tempoEmCentésimos });
+
+    // Ordena a classificação
+    classificacao.sort((a, b) => a.tempo - b.tempo);
+
+    // Atualiza a tabela
+    atualizarTabela();
 }
 
-// Função para carregar pilotos do Firestore
-function carregarPilotos() {
-    db.collection("pilotos").get().then((querySnapshot) => {
-        classificacao = []; // Limpa a classificação antes de carregar
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            classificacao.push({ nome: data.nome, tempo: data.tempo });
-        });
-        atualizarTabela(); // Atualiza a tabela com os dados carregados
+function converterTempoParaCentésimos(tempo) {
+    const partes = tempo.split(':');
+    if (partes.length !== 3) return null; // Formato inválido
+
+    const minutos = parseInt(partes[0]);
+    const segundos = parseInt(partes[1]);
+    const centésimos = parseInt(partes[2]);
+
+    // Converte para centésimos
+    return (minutos * 60 + segundos) * 100 + centésimos; 
+}
+
+function atualizarTabela() {
+    const tabela = document.getElementById('tabelaClassificacao');
+    
+    // Limpa a tabela, mantendo o cabeçalho
+    tabela.innerHTML = `
+        <tr>
+            <th>Posição</th>
+            <th>Nome</th>
+            <th>Tempo</th>
+        </tr>
+    `;
+
+    // Adiciona os dados atualizados à tabela
+    classificacao.forEach((piloto, index) => {
+        const tempoFormatado = formatarTempo(piloto.tempo);
+        const classe = index < 15 ? 'piloto-verde' : 'piloto-branco'; // Classe para a cor do nome
+        const linhaClasse = index === 14 ? 'piloto-vermelho' : ''; // Classe para a borda vermelha na 15ª linha
+
+        tabela.innerHTML += `
+            <tr class="${linhaClasse}">
+                <td class="${classe}">${index + 1}</td>
+                <td class="${classe}">${piloto.nome}</td>
+                <td class="${classe}">${tempoFormatado}</td>
+            </tr>
+        `;
     });
 }
 
-// Outras funções (converterTempoParaCentésimos, atualizarTabela, formatarTempo) permanecem as mesmas
+function formatarTempo(tempo) {
+    const centésimos = Math.floor(tempo % 100); // Centésimos com 2 dígitos
+    const totalSegundos = Math.floor(tempo / 100);
+    const minutos = Math.floor(totalSegundos / 60);
+    const segundos = totalSegundos % 60;
+
+    return `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}:${String(centésimos).padStart(2, '0')}`;
+}
+
+function limparTabela() {
+    classificacao = []; // Limpa a classificação
+    atualizarTabela(); // Atualiza a tabela para refletir a limpeza
+}
