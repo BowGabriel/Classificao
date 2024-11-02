@@ -1,5 +1,5 @@
 let classificacao = []; // Array para armazenar os pilotos e seus tempos
-const usuarioPermitido = "suaSenhaSegura"; // Substitua pela sua senha
+const usuarioPermitido = "Customs"; // Substitua pela sua senha
 
 // Função para mostrar o formulário de adição de pilotos
 function mostrarFormulario() {
