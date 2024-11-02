@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d3d3d3; /* Fundo cinza claro */
+    color: #000; /* Texto padrão em preto */
+    margin: 0;
+    padding: 20px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+input {
+    width: 200px;
+    color: #000; /* Texto do input em preto */
+}
+
+input:focus {
+    border: 2px solid #4CAF50; /* Borda verde quando focado */
+    outline: none; /* Remove o contorno padrão */
+}
+
+button {
+    background-color: #4CAF50; /* Cor do botão */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transição suave ao passar o mouse */
+}
+
+button:hover {
+    background-color: #45a049; /* Efeito hover */
+}
+
+table {
+    width: 60%;
+    margin: auto;
+    border-collapse: collapse;
+    background: #fff; /* Fundo da tabela em branco */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra leve na tabela */
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #000; /* Bordas da tabela em preto */
+    text-align: center;
+    color: #000; /* Texto das células da tabela em preto */
+}
+
+th {
+    background-color: #2E8FCD; /* Cor do cabeçalho */
+    color: #fff; /* Texto do cabeçalho em branco */
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Linhas pares com fundo claro */
+}
+
+.piloto-verde {
+    background-color: rgba(50, 205, 50, 0.5); /* Fundo verde-lima como marca-texto */
+    color: #000; /* Texto em preto para melhor legibilidade */
+}
+
+.piloto-branco {
+    color: #000; /* Nome em preto para pilotos além do 15º */
+}
+
+.piloto-vermelho td {
+    border-bottom: 2px solid red; /* Borda inferior vermelha para todas as células na 15ª linha */
+}
+
+.piloto-vermelho {
+    background-color: rgba(255, 255, 255, 0.5); /* Fundo verde-lima como marca-texto */
+    color: #000; /* Texto em preto para melhor legibilidade */
+}
+
+/* Ajustando a largura das células para os números e tempos */
+td:first-child, td:last-child {
+    width: 40px; /* Ajuste a largura conforme necessário */
+}
+
+td:nth-child(2) {
+    text-align: left; /* Alinha o nome do piloto à esquerda */
+}
